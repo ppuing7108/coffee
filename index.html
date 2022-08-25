@@ -1,0 +1,163 @@
+<html>
+  <body style="background: url('https://opgg-com-image.akamaized.net/attach/images/20200413143703.1147557.jpg') no-repeat center;background-size: cover;" onload="warning();">
+    <div style="width:9%;display: inline-block;">
+      <p class="left_warning" style="position: absolute; top: 50px; left: 30px; color: red; text-align: center; font-size: 40px;">제<br>발<br>내<br>이<br>름<br>이<br>호<br>명<br>되<br>지<br>않<br>길<br>기<br>도<br>해<br>라</p>
+    </div>
+    <div style="width:80%;display:inline-block;">
+      <h1 style="font-size:120px;text-align:center;margin-bottom:0;"> 💀<span style="color:red">죽음의</span> <span style="color: blue">호</span><span style="color: green">명</span><span style="color: red">기</span>💀 </h1>
+      <div id="addParticipant" style="text-align:center; margin-bottom: 5px;">
+        <input type="button" value="형태" onclick="add('형태', this);"  style="height:30px;width:60px;">
+        <input type="button" value="태규" onclick="add('태규', this);"  style="height:30px;width:60px;">
+        <input type="button" value="영환" onclick="add('영환', this);"  style="height:30px;width:60px;">
+        <input type="button" value="지승" onclick="add('지승', this);"  style="height:30px;width:60px;">
+        <input type="button" value="창선" onclick="add('창선', this);"  style="height:30px;width:60px;">
+        <input type="button" value="지웅" onclick="add('지웅', this);"  style="height:30px;width:60px;">
+        <input type="button" value="성호" onclick="add('성호', this);"  style="height:30px;width:60px;">
+        <input type="button" value="종찬" onclick="add('종찬', this);"  style="height:30px;width:60px;">
+        <input type="button" value="지우" onclick="add('지우', this);"  style="height:30px;width:60px;">
+
+        <input id="count" type="text" value="1" style="margin-left:50px;height:30px; width:30px;">
+        <input type="button" value="시작하기" onclick="start();" style="height:30px;width:100px;">
+      </div>
+
+      <div style="text-align: center;">
+        <h1 id="participants" style="color: white; display: inline;"></h1>
+        <h1 id="death_member" style="color: red; display: inline;"></h1>
+      </div>
+
+      <div id="game2" style="display: none; text-align: center;">
+        <input id="next" type="button" value="Next" onclick="showNext();" style="height: 50px; width: 100px;display: none;">
+        <div style="margin-top: 30px; margin-left: auto; margin-right: auto; font-size: 100px;">
+          <h1 id="result_old" style="display: inline; margin-bottom: 15px; color: white;"></h1><h1 id="result" style="display: inline; color: cyan; margin-bottom: 15px;"></h1>
+          <h3 id="message" style="display: none; margin-top: 15px; margin-bottom: 15px;color: red">커피 사와라.</h3>
+          <input id="restart" type="button" value="다시하기" style="display: none; height: 50px; width: 100px;" onclick="restart();">
+          <input id="resume" type="button" value="계속진행" style="display: none; height: 50px; width: 100px;" onclick="resume();">
+        </div>
+      </div>
+    </div>
+    <div style="width:9%;display: inline-block;">
+      <p class="right_warning" style="position: absolute; top: 50px; right: 30px; color: yellow; text-align: center; font-size: 40px;">안<br>걸<br>리<br>면<br>커<br>피<br>안<br>사<br>고<br>공<br>짜<br>로<br>먹<br>는<br>다</p>
+    </div>
+
+    <script>
+      var participants = [];
+      var deathMember = [];
+      var result = "";
+      var oldResult = "";
+      var chars = "";
+      var isGameOver = false;
+      var count = 1;
+      let intervalFunc;
+      var leftColor = "red";
+      var rightColor = "yellow";
+
+      function warning() {
+        setInterval(changeWarningColor, 1000);
+      }
+
+      function changeWarningColor() {
+        if (leftColor == "red") {
+          leftColor = "yellow";
+          rightColor = "red";
+        } else {
+          leftColor = "red";
+          rightColor = "yellow";
+        }
+        var left = document.getElementsByClassName("left_warning")[0];
+        var right = document.getElementsByClassName("right_warning")[0];
+        left.style.color = leftColor;
+        right.style.color = rightColor;
+      }
+
+      function add(name, event) {
+        // event.style.display = "none";
+        event.disabled = "disabled";
+        if(name == "") {
+          return;
+        }
+        participants.push(name);
+        document.getElementById("participants").innerHTML = participants;
+      }
+
+      function start() {
+        count = parseInt(document.getElementById("count").value);
+        if (count >= participants.length || count <= 0) {
+          return;
+        }
+
+        chars = participants.join("");
+        if (chars == "") {
+          return;
+        }
+        const unrepeated = (str) => [...new Set(str)].join('');
+        chars = unrepeated(chars);
+
+        document.getElementById("addParticipant").style.display = "none";
+        document.getElementById("game2").style.display = "block";
+        intervalFunc = setInterval(showNext, 1000);
+      }
+
+      function showNext() {
+        var i = Math.floor(Math.random() * chars.length);
+        result += chars[i];
+
+        if (result.length > 2) {
+          oldResult += result[0];
+          result = result.substring(1);
+        }
+        if (oldResult.length > 4) {
+          oldResult = oldResult.substring(1);
+        }
+
+        document.getElementById("result_old").innerText = oldResult;
+        document.getElementById("result").innerText = result;
+
+        if (participants.includes(result)) {
+          // game over
+          document.getElementById("result").innerText = "🎉" + result + "🎉";
+          document.getElementById("result").style.color = "red";
+          document.getElementById("next").disabled = "disabled";
+          document.getElementById("message").style.display = "block";
+
+          isGameOver = true;
+          deathMember.push(result);
+
+          var idx = participants.indexOf(result);
+          if (idx != -1) {
+            participants.splice(idx, 1);
+          }
+
+          document.getElementById("death_member").innerText = "🪦" + deathMember + "🪦";
+          document.getElementById("participants").innerHTML = participants;
+          clearInterval(intervalFunc);
+          intervalFunc = null;
+          count -= 1;
+
+          if (count <= 0) {
+            document.getElementById("restart").style.display = "inline-block";
+          } else {
+            document.getElementById("resume").style.display = "inline-block";
+          }
+        }
+      }
+
+      function resume() {
+        chars = participants.join("");
+        if (chars == "") {
+          return;
+        }
+        const unrepeated = (str) => [...new Set(str)].join('');
+        chars = unrepeated(chars);
+
+        document.getElementById("result").style.color = "cyan";
+        document.getElementById("resume").style.display = "none";
+
+        intervalFunc = setInterval(showNext, 1000);
+      }
+
+      function restart() {
+        window.location.reload();
+      }
+    </script>
+  </body>
+</html>
