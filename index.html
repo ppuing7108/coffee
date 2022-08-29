@@ -57,6 +57,7 @@
       var backgroundIndex = 0;
       var gameStatus = "ready"; // ready / playing / gameover
       var gameOverImage = document.getElementById("gameover_animation");
+      var backgrounds = ["background.jpg", "background-2.jpeg", "background-3.jpeg", "background-4.jpeg", "background-5.jpeg"];
 
       function setParticipantNumbers() {
         numOfParticipants = document.getElementById("numParticipants").value;
@@ -80,6 +81,14 @@
       }
 
       function timer() {
+        // load background images at background process
+        for (i = 0; i < backgrounds.length; i++) {
+          var image = document.createElement("img");
+          image.src = "static/img/" + backgrounds[i];
+          image.style.display = "none";
+          console.log(image);
+        }
+
         setInterval(changeWarningColor, 1000);
         // setInterval(changeBackground, 1000);
       }
@@ -100,7 +109,6 @@
 
       function changeBackground() {
         var body = document.getElementById("body");
-        var backgrounds = ["background.jpg", "background-2.jpeg", "background-3.jpeg", "background-4.jpeg", "background-5.jpeg"];
 
         if (gameStatus == "playing") {
           backgroundIndex = (backgroundIndex + 1) % backgrounds.length;
