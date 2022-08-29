@@ -1,12 +1,18 @@
 <html>
-  <body style="background: url('/static/img/background.jpg') no-repeat center;background-size: cover;" onload="warning();">
+  <body style="background: url('static/img/background.jpg') no-repeat center;background-size: cover;" onload="warning();">
     <div style="width:9%;display: inline-block;">
       <p class="left_warning" style="position: absolute; top: 50px; left: 30px; color: red; text-align: center; font-size: 40px;">제<br>발<br>내<br>이<br>름<br>이<br>호<br>명<br>되<br>지<br>않<br>길<br>기<br>도<br>해<br>라</p>
     </div>
     <div style="width:80%;display:inline-block;">
       <h1 style="font-size:120px;text-align:center;margin-bottom:0;"> 💀<span style="color:red">죽음의</span> <span style="color: blue">호</span><span style="color: green">명</span><span style="color: red">기</span>💀 </h1>
-      <div id="addParticipant" style="text-align:center; margin-bottom: 5px;">
-        <input type="button" value="형태" onclick="add('형태', this);"  style="height:30px;width:60px;">
+      <div id="setNumOfParticipants" style="text-align:center; margin-bototm: 5px;">
+        <input id="numParticipants" type="text" value="" placeholder="참가자 수 입력" style="height:30px;width:110px;">
+        <input type="button" value="다음으로" onclick="setParticipantNumbers();" style="height:30px;width:100px;">
+      </div>
+
+      <div id="addParticipant" style="text-align:center; margin-bottom: 5px; display: none;">
+        <span id="participantsInputGroup"></span>
+        <!--<input type="button" value="형태" onclick="add('형태', this);"  style="height:30px;width:60px;">
         <input type="button" value="태규" onclick="add('태규', this);"  style="height:30px;width:60px;">
         <input type="button" value="영환" onclick="add('영환', this);"  style="height:30px;width:60px;">
         <input type="button" value="지승" onclick="add('지승', this);"  style="height:30px;width:60px;">
@@ -14,7 +20,7 @@
         <input type="button" value="지웅" onclick="add('지웅', this);"  style="height:30px;width:60px;">
         <input type="button" value="성호" onclick="add('성호', this);"  style="height:30px;width:60px;">
         <input type="button" value="종찬" onclick="add('종찬', this);"  style="height:30px;width:60px;">
-        <input type="button" value="지우" onclick="add('지우', this);"  style="height:30px;width:60px;">
+        <input type="button" value="지우" onclick="add('지우', this);"  style="height:30px;width:60px;">-->
 
         <input id="count" type="text" value="1" style="margin-left:50px;height:30px; width:30px;">
         <input type="button" value="시작하기" onclick="start();" style="height:30px;width:100px;">
@@ -50,6 +56,28 @@
       let intervalFunc;
       var leftColor = "red";
       var rightColor = "yellow";
+      var numOfParticipants = 2;
+
+      function setParticipantNumbers() {
+        numOfParticipants = document.getElementById("numParticipants").value;
+        if (numOfParticipants < 2) {
+          alert("참가자는 2인 이상이어야 합니다.");
+        }
+
+        document.getElementById("setNumOfParticipants").style.display = "none";
+        document.getElementById("addParticipant").style.display = "block";
+
+        var inputGroup = document.getElementById("participantsInputGroup");
+        // add Inputs in the participants form
+        for (var i = 0; i < numOfParticipants; i++) {
+            var input = document.createElement("input");
+            input.style.height = "30px";
+            input.style.width = "60px";
+            input.classList.add("username");
+            input.placeholder = "이름";
+            inputGroup.appendChild(input);
+        }
+      }
 
       function warning() {
         setInterval(changeWarningColor, 1000);
@@ -80,6 +108,23 @@
       }
 
       function start() {
+        // create participants list, check empty value
+        var inputs = document.getElementsByClassName("username");
+        participants = [];
+        for (var i = 0; i < numOfParticipants; i++) {
+            name = inputs[i].value;
+            if(name == undefined || name == null || name == "") {
+              alert("참가자 이름을 채워주세요.");
+              return;
+            }
+
+            participants.push(name);
+        }
+        document.getElementById("participants").innerHTML = participants;
+        Array.from(inputs).forEach(input => {
+          input.disabled = "disabled";
+        })
+
         count = parseInt(document.getElementById("count").value);
         if (count >= participants.length || count <= 0) {
           return;
