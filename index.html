@@ -1,5 +1,5 @@
 <html>
-  <body style="background: url('static/img/background.jpg') no-repeat center;background-size: cover;" onload="warning();">
+  <body id="body" style="background: url('static/img/background.jpg') repeat center;" onload="timer();">
     <div style="width:9%;display: inline-block;">
       <p class="left_warning" style="position: absolute; top: 50px; left: 30px; color: red; text-align: center; font-size: 40px;">제<br>발<br>내<br>이<br>름<br>이<br>호<br>명<br>되<br>지<br>않<br>길<br>기<br>도<br>해<br>라</p>
     </div>
@@ -51,17 +51,18 @@
       var result = "";
       var oldResult = "";
       var chars = "";
-      var isGameOver = false;
       var count = 1;
       let intervalFunc;
       var leftColor = "red";
       var rightColor = "yellow";
       var numOfParticipants = 2;
+      var backgroundIndex = 0;
+      var gameStatus = "ready"; // ready / playing / gameover
 
       function setParticipantNumbers() {
         numOfParticipants = document.getElementById("numParticipants").value;
         if (numOfParticipants < 2) {
-          alert("참가자는 2인 이상이어야 합니다.");
+          alert("참가자를 2명 이상 입력해라..");
         }
 
         document.getElementById("setNumOfParticipants").style.display = "none";
@@ -79,8 +80,9 @@
         }
       }
 
-      function warning() {
+      function timer() {
         setInterval(changeWarningColor, 1000);
+        setInterval(changeBackground, 1000);
       }
 
       function changeWarningColor() {
@@ -95,6 +97,19 @@
         var right = document.getElementsByClassName("right_warning")[0];
         left.style.color = leftColor;
         right.style.color = rightColor;
+      }
+
+      function changeBackground() {
+        var body = document.getElementById("body");
+        var backgrounds = ["background.jpg", "background-2.jpeg", "background-3.jpeg", "background-4.jpeg", "background-5.jpeg"];
+
+        if (gameStatus == "playing") {
+          backgroundIndex = (backgroundIndex + 1) % backgrounds.length;
+          body.style.background = "url(static/img/" + backgrounds[backgroundIndex] + ") repeat center";
+        }
+        else if (gameStatus == "gameover") {
+          body.style.background = "url(static/img/background-2.jpeg) repeat center";
+        }
       }
 
       function add(name, event) {
@@ -140,6 +155,7 @@
         document.getElementById("addParticipant").style.display = "none";
         document.getElementById("game2").style.display = "block";
         intervalFunc = setInterval(showNext, 1000);
+        gameStatus = "playing";
       }
 
       function showNext() {
@@ -164,7 +180,7 @@
           document.getElementById("next").disabled = "disabled";
           document.getElementById("message").style.display = "block";
 
-          isGameOver = true;
+          gameStatus = "gameover";
           deathMember.push(result);
 
           var idx = participants.indexOf(result);
@@ -182,6 +198,7 @@
             document.getElementById("restart").style.display = "inline-block";
           } else {
             document.getElementById("resume").style.display = "inline-block";
+            gameStatus = "playing";
           }
         }
       }
