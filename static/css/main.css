@@ -1,0 +1,20 @@
+@keyframes anim {
+  0% { transform: scale(0) rotate(-1080deg); }
+  50% { transform: scale(1); }
+  100% { transform: scale(3); }
+}
+
+.anim_gameover {
+  display: none;
+}
+
+.anim_gameover.show {
+  display: block;
+  positin: absolute;
+  top: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  animation: anim 2s;
+}
