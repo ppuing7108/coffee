@@ -36,7 +36,7 @@
         </div>
       </div>
 
-      <image src="static/img/background.jpg" id="gameover_animation" class="anim_gameover" style="position: absolute;">
+      <image src="static/img/jk.gif" id="gameover_animation" class="anim_gameover" style="position: absolute;">
     </div>
     <div style="width:9%;display: inline-block;">
       <p class="right_warning" style="position: absolute; top: 50px; right: 30px; color: yellow; text-align: center; font-size: 40px; background: rgba(0,0,0,0.4);">안<br>걸<br>리<br>면<br>커<br>피<br>안<br>사<br>고<br>공<br>짜<br>로<br>먹<br>는<br>다</p>
@@ -57,7 +57,8 @@
       var backgroundIndex = 0;
       var gameStatus = "ready"; // ready / playing / gameover
       var gameOverImage = document.getElementById("gameover_animation");
-      var backgrounds = ["background.jpg", "background-2.jpeg", "background-3.jpeg", "background-4.jpeg", "background-5.jpeg"];
+      var backgrounds = ["background.jpg", "background-2.jpeg", "background-3.jpeg", "background-4.jpeg", "background-5.jpeg", "njh.jpeg", "ksj.jpeg", "jyy.jpeg"];
+      var animImages = ["kk.gif", "jk.gif", "mds.jpg"];
 
       function setParticipantNumbers() {
         numOfParticipants = document.getElementById("numParticipants").value;
@@ -86,7 +87,11 @@
           var image = document.createElement("img");
           image.src = "static/img/" + backgrounds[i];
           image.style.display = "none";
-          console.log(image);
+        }
+        for (var i = 0; i < animImages; i++) {
+          var image = document.createElement("img");
+          image.src = "static/img/" + animImages[i];
+          image.style.display = "none";
         }
 
         setInterval(changeWarningColor, 1000);
@@ -121,10 +126,13 @@
 
       function gameOverAnimation() {
         if (gameStatus == "gameover") {
+          var i = Math.floor(Math.random() * animImages.length);
+          var src = "static/img/" + animImages[i];
+          gameOverImage.src = src;
           gameOverImage.classList.add("show");
           setTimeout(function() {
             gameOverImage.classList.remove("show");
-          }, 2000);
+          }, 5000);
         } else {
           gameOverImage.classList.remove("show");
         }

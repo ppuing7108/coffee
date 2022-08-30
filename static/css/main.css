@@ -1,5 +1,5 @@
 @keyframes anim {
-  0% { transform: scale(0) rotate(-1080deg); }
+  0% { transform: scale(0) rotate(-2160deg); }
   50% { transform: scale(1); }
   100% { transform: scale(3); }
 }
