@@ -44,7 +44,6 @@
 
     <script>
       var participants = [];
-      var remainParticipants = [];
       var deathMember = [];
       var result = "";
       var oldResult = "";
@@ -142,7 +141,6 @@
         // create participants list, check empty value
         var inputs = document.getElementsByClassName("username");
         participants = [];
-        remainParticipants = [];
         for (var i = 0; i < numOfParticipants; i++) {
             name = inputs[i].value;
             if(name == undefined || name == null || name == "") {
@@ -151,15 +149,14 @@
             }
 
             participants.push(name);
-            remainParticipants.push(name);
         }
-        document.getElementById("participants").innerHTML = remainParticipants;
+        document.getElementById("participants").innerHTML = participants;
         Array.from(inputs).forEach(input => {
           input.disabled = "disabled";
         })
 
         count = parseInt(document.getElementById("count").value);
-        if (count >= remainParticipants.length || count <= 0) {
+        if (count >= participants.length || count <= 0) {
           return;
         }
 
@@ -192,7 +189,7 @@
         document.getElementById("result_old").innerText = oldResult;
         document.getElementById("result").innerText = result;
 
-        if (remainParticipants.includes(result)) {
+        if (participants.includes(result)) {
           // game over
           document.getElementById("result").innerText = "🎉" + result + "🎉";
           document.getElementById("result").style.color = "red";
@@ -204,13 +201,13 @@
           changeBackground();
           gameOverAnimation();
 
-          var idx = remainParticipants.indexOf(result);
+          var idx = participants.indexOf(result);
           if (idx != -1) {
-            remainParticipants.splice(idx, 1);
+            participants.splice(idx, 1);
           }
 
           document.getElementById("death_member").innerText = "🪦" + deathMember + "🪦";
-          document.getElementById("participants").innerHTML = remainParticipants;
+          document.getElementById("participants").innerHTML = participants;
           clearInterval(intervalFunc);
           intervalFunc = null;
           count -= 1;
