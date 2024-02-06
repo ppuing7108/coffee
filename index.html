@@ -49,6 +49,7 @@
       var oldResult = "";
       var chars = "";
       var count = 1;
+      var playerNameLength = 0;
       let intervalFunc;
       var leftColor = "red";
       var rightColor = "yellow";
@@ -78,6 +79,15 @@
             input.placeholder = "이름";
             inputGroup.appendChild(input);
         }
+      }
+
+      function setGameFontSize() {
+        var fontSize = '2em';
+        if (playerNameLength >= 3) {
+          fontSize = '1.5em';
+        }
+        document.getElementById("result_old").style.fontSize = fontSize;
+        document.getElementById("result").style.fontSize = fontSize;
       }
 
       function timer() {
@@ -141,15 +151,28 @@
         // create participants list, check empty value
         var inputs = document.getElementsByClassName("username");
         participants = [];
+        playerNameLength = null;
         for (var i = 0; i < numOfParticipants; i++) {
+            // 플레이어 이름이 서로 다르면 에러
+            if (playerNameLength != null && playerNameLength != inputs[i].value.length) {
+                alert("참가자 이름 길이를 모두 맞춰라...");
+                return
+            }
+            // 플레이어 이름 길이 초기화
+            if (playerNameLength == null)
+                playerNameLength = inputs[i].value.length;
             name = inputs[i].value;
             if(name == undefined || name == null || name == "") {
-              alert("참가자 이름을 채워주세요.");
+              alert("참가자 이름을 채워라...");
               return;
             }
 
             participants.push(name);
         }
+
+        // 참가자 이름 길이에 따라 폰트사이즈 맞춤
+        setGameFontSize();
+
         document.getElementById("participants").innerHTML = participants;
         Array.from(inputs).forEach(input => {
           input.disabled = "disabled";
@@ -177,12 +200,13 @@
         changeBackground();
         var i = Math.floor(Math.random() * chars.length);
         result += chars[i];
+        console.log(result);
 
-        if (result.length > 2) {
+        if (result.length > playerNameLength) {
           oldResult += result[0];
           result = result.substring(1);
         }
-        if (oldResult.length > 4) {
+        if (oldResult.length > playerNameLength * 2) {
           oldResult = oldResult.substring(1);
         }
 
@@ -231,6 +255,7 @@
 
         document.getElementById("result").style.color = "cyan";
         document.getElementById("resume").style.display = "none";
+        document.getElementById("message").style.display = "none";
 
         intervalFunc = setInterval(showNext, 1000);
       }
